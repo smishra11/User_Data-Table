@@ -4,9 +4,20 @@ import Pagination from '../Pagination/Pagination';
 
 const Alluser = ({ data, itemsPerPage, startFrom }) => {
   const [search, setSearch] = useState('');
+  const [sortByKey, setSortByKey] = useState('name');
+  const [order, setOrder] = useState('asc');
+  const columns = [
+    { label: 'First Name', sortKey: 'first_name' },
+    { label: 'Last Name', sortKey: 'last_name' },
+    { label: 'Age', sortKey: 'age' },
+    { label: 'Email', sortKey: 'email' },
+    { label: 'Website', sortKey: 'web' },
+  ];
+
   const {
     slicedData,
     pagination,
+    filteredData,
     changePage,
     setFilteredData,
     setSearching,
@@ -22,14 +33,51 @@ const Alluser = ({ data, itemsPerPage, startFrom }) => {
         user.last_name.toLowerCase().includes(search)
       );
     });
+    const copyOfFilteredData = [...filtered];
+    const sortFiltered = sortData(copyOfFilteredData, sortByKey, order);
+    setFilteredData(sortFiltered);
+  };
+
+  const sortHandler = (sortBy, orderBy) => {
+    if (sortByKey !== sortBy) {
+      setSortByKey(sortBy);
+    }
+    if (order !== orderBy) {
+      setOrder(orderBy);
+    }
+    const copyOfFilteredData = [...filteredData];
+    const filtered = sortData(copyOfFilteredData, sortBy, orderBy);
     setFilteredData(filtered);
   };
 
-  const onFirstnameClicked = (key) => {
-    console.log('first name Clicked', key);
+  const sortData = (dataToSort, sortBy, orderBy) => {
+    const filtered = dataToSort.sort((a, b) => {
+      if (orderBy === 'asc') {
+        if (a[sortBy] < b[sortBy]) {
+          return -1;
+        } else if (a[sortBy] > b[sortBy]) {
+          return 1;
+        } else {
+          return 0;
+        }
+      } else {
+        if (b[sortBy] < a[sortBy]) {
+          return -1;
+        } else if (b[sortBy] > a[sortBy]) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    });
+    return filtered;
   };
+
+  // const onFirstnameClicked = (key) => {
+  //   console.log('first name Clicked', key);
+  // };
   return (
-    <div className="wrapper">
+    <div>
       <form
         onSubmit={submitHandler}
         className="mt-3 mb-3 is-flex"
@@ -55,19 +103,39 @@ const Alluser = ({ data, itemsPerPage, startFrom }) => {
           <table className="table is-fullwidth is-striped">
             <thead>
               <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Age</th>
-                <th>Email</th>
-                <th>Website</th>
+                {columns.map((col, index) => (
+                  <th
+                    key={index}
+                    onClick={() =>
+                      sortHandler(
+                        col.sortKey,
+                        sortByKey === col.sortKey
+                          ? order === 'asc'
+                            ? 'desc'
+                            : 'asc'
+                          : 'asc'
+                      )
+                    }
+                  >
+                    {col.label}
+                    {sortByKey === col.sortKey && (
+                      <span className="icon">
+                        {order === 'asc' ? (
+                          <i className="fas fa-sort-up"></i>
+                        ) : (
+                          <i className="fas fa-sort-down"></i>
+                        )}
+                      </span>
+                    )}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {slicedData.map((item) => (
                 <tr key={item.id}>
-                  <td onClick={() => onFirstnameClicked(item.id)}>
-                    {item.first_name}
-                  </td>
+                  {/* <td onClick={() => onFirstnameClicked(item.id)}> */}
+                  <td>{item.first_name}</td>
                   <td>{item.last_name}</td>
                   <td>{item.age}</td>
                   <td>{item.email}</td>

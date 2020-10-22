@@ -61,6 +61,7 @@ const Pagination = (initialState) => {
   return {
     slicedData,
     pagination,
+    filteredData,
     changePage,
     setFilteredData,
     setSearching,
