@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import './Userdetails.css';
 import Backicon from './back.svg';
 import axios from 'axios';
-import Loader from '../Alluser/spinner1.gif';
+import Loader from './spinner1.gif';
 
 class Userdetails extends Component {
   state = {
@@ -12,19 +12,17 @@ class Userdetails extends Component {
     isLoading: true,
   };
   componentDidMount = () => {
-    const userId = this.props.match.params.id;
-    console.log('id', userId);
     axios
       .get(
         'https://datapeace-storage.s3-us-west-2.amazonaws.com/dummy_data/users.json'
       )
       .then((res) => {
-        let singleUserDetails = res.data.filter((user) => {
-          return user.id.toString() === userId;
+        let userId = this.props.location.state;
+        let filteredUserDetails = res.data.filter((user) => {
+          return user.id === userId;
         });
-        // console.log('usr', singleUserDetails);
         this.setState({
-          userDetails: singleUserDetails[0],
+          userDetails: filteredUserDetails[0],
           isLoading: false,
         });
       })
@@ -51,7 +49,7 @@ class Userdetails extends Component {
               >
                 <img src={Backicon} alt="BackIcon" />
               </Link>
-              <h2>
+              <h2 style={{ fontSize: '25px', fontWeight: 'bold' }}>
                 Details : {this.state.userDetails.first_name}{' '}
                 {this.state.userDetails.last_name}
               </h2>
@@ -100,4 +98,4 @@ class Userdetails extends Component {
     );
   }
 }
-export default Userdetails;
+export default withRouter(Userdetails);

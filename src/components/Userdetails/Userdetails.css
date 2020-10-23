@@ -1,0 +1,23 @@
+.userdetails {
+  margin: 2rem 8rem;
+  box-shadow: 0px 2px 2px 2px #ccc;
+  padding-top: 10px;
+}
+.userdetails_titile {
+  display: flex;
+  margin: 1rem 2rem;
+  color: #3273dc;
+}
+.userdetails_body {
+  padding: 40px;
+}
+.userdetails_body_elements {
+  font-size: 14px;
+}
+.spinner {
+  display: flex;
+  justify-content: center;
+}
+.userdetails_body hr {
+  margin: 15px 0;
+}

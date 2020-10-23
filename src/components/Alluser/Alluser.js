@@ -1,11 +1,16 @@
 import React, { Fragment, useState } from 'react';
 
 import Pagination from '../Pagination/Pagination';
+import { useHistory } from 'react-router-dom';
+import Userdetails from '../Userdetails/Userdetails';
 
 const Alluser = ({ data, itemsPerPage, startFrom }) => {
   const [search, setSearch] = useState('');
   const [sortByKey, setSortByKey] = useState('name');
   const [order, setOrder] = useState('asc');
+  const [userDetails, setUserDetails] = useState(false);
+  let history = useHistory();
+
   const columns = [
     { label: 'First Name', sortKey: 'first_name' },
     { label: 'Last Name', sortKey: 'last_name' },
@@ -73,113 +78,135 @@ const Alluser = ({ data, itemsPerPage, startFrom }) => {
     return filtered;
   };
 
-  // const onFirstnameClicked = (key) => {
-  //   console.log('first name Clicked', key);
-  // };
+  const onFirstnameClicked = (userId) => {
+    history.push({ pathname: `/users/${userId}`, state: userId });
+    setUserDetails(true);
+  };
+
   return (
-    <div>
-      <form
-        onSubmit={submitHandler}
-        className="mt-3 mb-3 is-flex"
-        style={{ justifyContent: 'center' }}
-      >
-        <div className="field mr-2">
-          <div className="control">
-            <input
-              type="text"
-              className="input"
-              placeholder="Search with first or last name"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </div>
-        <button type="submit" className="button is-link">
-          Search
-        </button>
-      </form>
-      {slicedData.length > 0 ? (
-        <Fragment>
-          <table className="table is-fullwidth is-striped">
-            <thead>
-              <tr>
-                {columns.map((col, index) => (
-                  <th
-                    key={index}
-                    onClick={() =>
-                      sortHandler(
-                        col.sortKey,
-                        sortByKey === col.sortKey
-                          ? order === 'asc'
-                            ? 'desc'
-                            : 'asc'
-                          : 'asc'
-                      )
-                    }
-                  >
-                    {col.label}
-                    {sortByKey === col.sortKey && (
-                      <span className="icon">
-                        {order === 'asc' ? (
-                          <i className="fas fa-sort-up"></i>
-                        ) : (
-                          <i className="fas fa-sort-down"></i>
-                        )}
-                      </span>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {slicedData.map((item) => (
-                <tr key={item.id}>
-                  {/* <td onClick={() => onFirstnameClicked(item.id)}> */}
-                  <td>{item.first_name}</td>
-                  <td>{item.last_name}</td>
-                  <td>{item.age}</td>
-                  <td>{item.email}</td>
-                  <td>{item.web}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <nav className="pagination">
-            <ul className="pagination-list">
-              {pagination.map((page) => {
-                if (!page.ellipsis) {
-                  return (
-                    <li key={page.id}>
-                      <a
-                        href="/#"
-                        className={
-                          page.current
-                            ? 'pagination-link is-current'
-                            : 'pagination-link'
+    <>
+      {!userDetails ? (
+        <div className="container px-2">
+          <form
+            onSubmit={submitHandler}
+            className="mt-3 mb-3 is-flex"
+            style={{ justifyContent: 'center' }}
+          >
+            <div className="field mr-2">
+              <div className="control">
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="Search with first or last name"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </div>
+            <button type="submit" className="button is-link">
+              Search
+            </button>
+          </form>
+          {slicedData.length > 0 ? (
+            <Fragment>
+              <table className="table is-fullwidth is-striped">
+                <thead>
+                  <tr>
+                    {columns.map((col, index) => (
+                      <th
+                        key={index}
+                        onClick={() =>
+                          sortHandler(
+                            col.sortKey,
+                            sortByKey === col.sortKey
+                              ? order === 'asc'
+                                ? 'desc'
+                                : 'asc'
+                              : 'asc'
+                          )
                         }
-                        onClick={(e) => changePage(page.id, e)}
                       >
-                        {page.id}
-                      </a>
-                    </li>
-                  );
-                } else {
-                  return (
-                    <li key={page.id}>
-                      <span className="pagination-ellipsis">&hellip;</span>
-                    </li>
-                  );
-                }
-              })}
-            </ul>
-          </nav>
-        </Fragment>
-      ) : (
-        <div className="message is-link">
-          <div className="message-body has-text-centered">No results found</div>
+                        {col.label}
+                        {sortByKey === col.sortKey && (
+                          <span className="icon">
+                            {order === 'asc' ? (
+                              <i className="fas fa-sort-up"></i>
+                            ) : (
+                              <i className="fas fa-sort-down"></i>
+                            )}
+                          </span>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {slicedData.map((item) => (
+                    <tr key={item.id}>
+                      <td
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => onFirstnameClicked(item.id)}
+                      >
+                        {item.first_name}
+                      </td>
+                      <td>{item.last_name}</td>
+                      <td>{item.age}</td>
+                      <td>{item.email}</td>
+                      <td>
+                        <a
+                          href={item.web}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {item.web}
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <nav className="pagination">
+                <ul className="pagination-list">
+                  {pagination.map((page) => {
+                    if (!page.ellipsis) {
+                      return (
+                        <li key={page.id}>
+                          <a
+                            href="/#"
+                            className={
+                              page.current
+                                ? 'pagination-link is-current'
+                                : 'pagination-link'
+                            }
+                            onClick={(e) => changePage(page.id, e)}
+                          >
+                            {page.id}
+                          </a>
+                        </li>
+                      );
+                    } else {
+                      return (
+                        <li key={page.id}>
+                          <span className="pagination-ellipsis">&hellip;</span>
+                        </li>
+                      );
+                    }
+                  })}
+                </ul>
+              </nav>
+            </Fragment>
+          ) : (
+            <div className="message is-link">
+              <div className="message-body has-text-centered">
+                No results found
+              </div>
+            </div>
+          )}
         </div>
+      ) : (
+        <Userdetails />
       )}
-    </div>
+    </>
   );
 };
 

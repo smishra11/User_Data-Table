@@ -13,3 +13,16 @@
 .table tr th:nth-child(5) {
   width: 33%;
 }
+
+.table tbody tr td a:hover {
+  color: #3273dc;
+}
+
+.table {
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #3273dc;
+}
+
+.table tr th {
+  cursor: pointer;
+}
