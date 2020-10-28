@@ -10,6 +10,7 @@ class Userdetails extends Component {
   state = {
     userDetails: {},
     isLoading: true,
+    userNotFound: false,
   };
   componentDidMount = () => {
     axios
@@ -21,6 +22,10 @@ class Userdetails extends Component {
         let filteredUserDetails = res.data.filter((user) => {
           return user.id === userId;
         });
+        if (!filteredUserDetails.length) {
+          this.setState({ userNotFound: true, isLoading: false });
+          return;
+        }
         this.setState({
           userDetails: filteredUserDetails[0],
           isLoading: false,
@@ -32,7 +37,22 @@ class Userdetails extends Component {
   render() {
     return (
       <>
-        {this.state.isLoading ? (
+        {this.state.userNotFound ? (
+          <div
+            style={{
+              height: '100vh',
+              fontSize: '40px',
+              fontWeight: 'bold',
+              color: 'red',
+              textAlign: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            User Not Found
+          </div>
+        ) : this.state.isLoading ? (
           <div className="spinner">
             <img src={Loader} alt="loader" />
           </div>
