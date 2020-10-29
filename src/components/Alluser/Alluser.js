@@ -34,8 +34,8 @@ const Alluser = ({ data, itemsPerPage, startFrom }) => {
     const copiedData = [...data];
     const filtered = copiedData.filter((user) => {
       return (
-        user.first_name.toLowerCase().includes(search) ||
-        user.last_name.toLowerCase().includes(search)
+        user.first_name.toLowerCase().includes(search.toLowerCase()) ||
+        user.last_name.toLowerCase().includes(search.toLowerCase())
       );
     });
     const copyOfFilteredData = [...filtered];
