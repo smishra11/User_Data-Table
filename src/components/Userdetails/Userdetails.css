@@ -21,3 +21,14 @@
 .userdetails_body hr {
   margin: 15px 0;
 }
+
+.error_page {
+  height: 100vh;
+  font-size: 40px;
+  font-weight: bold;
+  color: red;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -38,20 +38,7 @@ class Userdetails extends Component {
     return (
       <>
         {this.state.userNotFound ? (
-          <div
-            style={{
-              height: '100vh',
-              fontSize: '40px',
-              fontWeight: 'bold',
-              color: 'red',
-              textAlign: 'center',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            User Not Found
-          </div>
+          <div className="error_page">User Not Found</div>
         ) : this.state.isLoading ? (
           <div className="spinner">
             <img src={Loader} alt="loader" />
